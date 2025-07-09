@@ -1,13 +1,13 @@
 # Insider Threat Detection with Azure Synapse and Azure OpenAI
 
-Detect and investigate insider threats using behavioral analytics and generative AI. This project uses Azure Synapse, SynapseML, and Azure OpenAI to build a scalable solution for identifying and analyzing anomalous user behavior.
+Detect and investigate insider threats using anomaly detection and generative AI. This solution uses **_Azure Synapse, SynapseML, and Azure OpenAI_** to build a scalable solution for identifying and analyzing anomalous user behavior. Insider threats remain one of the most challenging security risks to detect and mitigate. Unlike external threats, insiders have legitimate access, making their actions harder to distinguish from normal activity. 
 
-<!-- ![Azure Architecture Diagram](./images/architecture.png) -->
 ---
 ## 📌 Project Overview
 This repository showcases a modern approach to insider threat detection by combining:
 - **Machine learning** with SynapseML’s Isolation Forest
 - **Natural language insights** with Azure OpenAI to summarize and assess user risk
+
 ---
 ## 🚀 Technologies Used
 - **Azure Synapse Analytics (Spark & SQL)**
@@ -32,19 +32,20 @@ The [CMU CERT v4.2 dataset](https://resources.sei.cmu.edu/library/asset-view.cfm
 
 ---
 ## 🧱 Project Structure
-📦 insider-threat-detection-synapse-openai
-
-├── data_cleaning/ \
+📦 azure_insider_threat_detection \
+├── **01_data_cleaning/** \
 │ ├── clean_device_events.ipynb \
 │ ├── clean_email_events.ipynb \
 │ ├── clean_file_events.ipynb \
 │ └── clean_http_events.ipynb \
 │ └── clean_logon_events.ipynb \
 │ └── clean_user_details.ipynb (LDAP dataset) \
-├── model_training_and_inference/ \
+├── **02_anomaly_detection/** \
 │ ├── engineer_model_features.ipynb \
 │ └── train_isolation_forest.ipynb \
+├── **03_aoai_user_investigation/** \
 │ └── aoai_investigate_anomalies.ipynb \
+│ └── example_aoai_anomaly_analysis_output.md \
 └── README.md
 
 ---
@@ -65,7 +66,7 @@ The [CMU CERT v4.2 dataset](https://resources.sei.cmu.edu/library/asset-view.cfm
 - Flag the top 7% of users with most anomalous behavior
 
 ### 4. **User Investigation with OpenAI**
-- Pull the 200 most recent logs per dataset for a flagged user
+- Pull the 500 most recent logs per dataset for a flagged user
 - Generate a prompt embedding user activity + features
 - Use **Azure OpenAI** to summarize behavior:
  - Timeline of events
@@ -92,7 +93,7 @@ The [CMU CERT v4.2 dataset](https://resources.sei.cmu.edu/library/asset-view.cfm
   - Investigate flagged users using OpenAI
 
 ### 📌 Future Work
-* Automate the pipeline with Synapse Pipelines or Azure Data Factory
+* Automate the pipeline with Synapse Pipelines or Azure Data Factory - While this solution is implemented as a prototype, it is designed using scalable Azure components that support large volumes of data. The architecture can be extended into production pipelines using Synapse Pipelines and Azure Data Factory.
 * Add graph-based user behavior modeling
 * Experiment with time-series anomaly models (e.g., VAE, LSTM)
 
