@@ -10,25 +10,25 @@ This repository showcases a modern approach to insider threat detection by combi
 
 ---
 ## 🚀 Technologies Used
-- **Azure Synapse Analytics (Spark & SQL)**
-- **Azure OpenAI (GPT model)**
+- **Azure Synapse Analytics** (Spark & SQL)
+- **SynapseML** (Isolation Forest for anomaly detection)
+- **Azure OpenAI** (GPT-4)
 - **Azure Blob Storage**
-- **SynapseML**
-- **CMU CERT v4.2 Dataset**
+- **CMU CERT Insider Threat Dataset v4.2**
 ---
 ## 📁 Dataset
 The [CMU CERT v4.2 dataset](https://resources.sei.cmu.edu/library/asset-view.cfm?assetID=508099) simulates realistic insider threat scenarios using synthetic data including:
-- `logon.csv` - user logon and logoff events
-- `device.csv` - user device usage (example: USB insertion/removal)
-- `email.csv` - user email metadata (to, from, content, etc.)
-- `http.csv` - user web browsing activity (url
-- `file.csv` - user file copy to a removable media device
-- `psychometric.csv`\* - user [big 5](http://en.wikipedia.org/wiki/Big_Five_personality_traits) personality data
-- `LDAP/` - snapshots of the organizational structure and reporting relationships over time (employee unit, supervisor, role. etc)
+- `logon.csv`: User logon/logoff events
+- `file.csv`: File transfers to removable devices
+- `http.csv`: Web browsing history
+- `email.csv`: Email metadata (to/from, size, attachments)
+- `device.csv`: Device connection logs (e.g., USB usage)
+- `LDAP/`: Organizational hierarchy snapshots
+- \* `psychometric.csv`: Personality profile data
 
-**Each file is ingested into Azure Blob Storage and queried through Synapse.**
+All files were ingested into **Azure Blob Storage**, then queried and cleaned in **Azure Synapse Notebooks**.
 
-\* psychometric data was not used as most real-world organizations do not collect or maintain psychometric data on employees. Additionally using personality trait data to infer insider threat risk can raise serious ethical concerns, especially when such inferences are made without behavioral context or consent.
+\* _Note: Psychometric data was intentionally excluded from analysis due to ethical and privacy considerations._
 
 ---
 ## 🧱 Project Structure
@@ -51,35 +51,30 @@ The [CMU CERT v4.2 dataset](https://resources.sei.cmu.edu/library/asset-view.cfm
 ---
 ## 🔄 Workflow
 ### 1. **Data Ingestion & Cleaning**
-- Load `csv` files into Azure Data Lake Storage Gen2
+- Upload dataset `csv` files into Azure Data Lake Storage Gen2
 - Connect the data lake container to Synapse as a linked service
 - Explore data with Synapse SQL
-- Clean and standardize records using Spark in Synapse Notebooks
-- Write the cleaned datasets back to Synapse using Spark
-```df_clean.write.mode("overwrite").saveAsTable("clean_<event_type>_events")```
+- Clean and standardize records using Spark in Synapse Notebooks ([01_data_cleaning](01_data_cleaning))
 
-### 2. **Feature Engineering**
-- Generate model features from the log datasets
+### 2. **Anomaly Detection**
+- Generate model features from the cleaned log datasets ([engineer_model_features.ipynb](02_anomaly_detection/engineer_model_features.ipynb))
+- Train an _Isolation Forest_ model using SynapseML and flag the top 7% of most anomalous users ([train_isolation_forest.ipynb](02_anomaly_detection/train_isolation_forest.ipynb))
 
-### 3. **Anomaly Detection**
-- Train an **Isolation Forest** model using `SynapseML`
-- Flag the top 7% of users with most anomalous behavior
-
-### 4. **User Investigation with OpenAI**
-- Pull the 500 most recent logs per dataset for a flagged user
-- Generate a prompt embedding user activity + features
-- Use **Azure OpenAI** to summarize behavior:
- - Timeline of events
- - Anomalies detected
- - Risk assessment
- - Recommendations
+### 3. **User Investigation with OpenAI**
+- Use Azure OpenAI to analyze and summarize behaviors of the flagged anomalous users ([aoai_investigate_anomalies.ipynb](03_aoai_user_investigation/aoai_investigate_anomalies.ipynb))
+ - Pull the 500 most recent logs per cleaned dataset for a flagged user
+ - Pull user LDAP background information
+ - Pull user engineered features
+ - Generate a prompt embedding user logs, background information, and engineered features
+ - Submit the prompt to AOAI along with analysis instructions
+ - View AOAI output (summary, anomalous behaviors, timeline of events, risk assessment, recommendations) - [example output](03_aoai_user_investigation/example_aoai_anomaly_analysis_output.md)
 
 ---
 
 ### ✅ Requirements
 * Azure Subscription with:
   * Synapse workspace (with Spark pool)
-  * Azure OpenAI resource (GPT-4 or GPT-3.5)
+  * Azure OpenAI resource (GPT-4)
   * Storage account (Blob)
   
 ### 🛠️ Setup Instructions
