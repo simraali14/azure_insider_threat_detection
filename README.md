@@ -2,7 +2,7 @@
 
 Detect and investigate insider threats using behavioral analytics and generative AI. This project uses Azure Synapse, SynapseML, and Azure OpenAI to build a scalable solution for identifying and analyzing anomalous user behavior.
 
-<!-- ![Azure Architecture Diagram](./images/architecture.png) Optional: Add architecture image -->
+<!-- ![Azure Architecture Diagram](./images/architecture.png) -->
 ---
 ## 📌 Project Overview
 This repository showcases a modern approach to insider threat detection by combining:
@@ -40,7 +40,7 @@ The [CMU CERT v4.2 dataset](https://resources.sei.cmu.edu/library/asset-view.cfm
 │ ├── clean_file_events.ipynb \
 │ └── clean_http_events.ipynb \
 │ └── clean_logon_events.ipynb \
-│ └── clean_ldap_details.ipynb \
+│ └── clean_user_details.ipynb (LDAP dataset) \
 ├── model_training_and_inference/ \
 │ ├── engineer_model_features.ipynb \
 │ └── train_isolation_forest.ipynb \
