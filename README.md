@@ -6,7 +6,7 @@ Detect and investigate insider threats using anomaly detection and generative AI
 ## 📌 Project Overview
 This repository showcases a modern approach to insider threat detection by combining:
 - **Machine learning** with SynapseML’s Isolation Forest
-- **Natural language insights** with Azure OpenAI to summarize and assess user risk
+- **Generative AI insights** with Azure OpenAI to summarize and assess user risk
 
 ---
 ## 🚀 Technologies Used
