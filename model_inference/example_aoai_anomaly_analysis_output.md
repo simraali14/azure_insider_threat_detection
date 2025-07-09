@@ -1,4 +1,4 @@
-## 🧠 Insider Threat Analysis Summary (Example Output)
+## Insider Threat Analysis Summary (Example Output from AOAI)
 
 **User Summary**  
 User: Anonymous Employee (XXXXX-ID) — Senior IT Administrator in the Electronic Security team, with broad access and technical privileges.
