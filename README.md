@@ -1,6 +1,8 @@
 # Insider Threat Detection with Azure Synapse and Azure OpenAI
 
-Detect and investigate insider threats using anomaly detection and generative AI. This solution uses **_Azure Synapse, SynapseML, and Azure OpenAI_** to build a scalable solution for identifying and analyzing anomalous user behavior. Insider threats remain one of the most challenging security risks to detect and mitigate. Unlike external threats, insiders have legitimate access, making their actions harder to distinguish from normal activity. 
+Detect and investigate insider threats using anomaly detection and generative AI. This solution uses **_Azure Synapse, SynapseML, and Azure OpenAI_** to build a scalable solution for identifying and analyzing anomalous user behavior.
+
+_Motivation:_ Insider threats remain one of the most challenging security risks to detect and mitigate. Unlike external threats, insiders have legitimate access, making their actions harder to distinguish from normal activity. 
 
 ---
 ## 📌 Project Overview
@@ -11,13 +13,13 @@ This repository showcases a modern approach to insider threat detection by combi
 ---
 ## 🚀 Technologies Used
 - **Azure Synapse Analytics** (Spark & SQL)
-- **SynapseML** (Isolation Forest for anomaly detection)
+- **Azure SynapseML** (Isolation Forest for anomaly detection)
 - **Azure OpenAI** (GPT-4)
 - **Azure Blob Storage**
-- **CMU CERT Insider Threat Dataset v4.2**
+
 ---
 ## 📁 Dataset
-The [CMU CERT v4.2 dataset](https://resources.sei.cmu.edu/library/asset-view.cfm?assetID=508099) simulates realistic insider threat scenarios using synthetic data including:
+The [CMU CERT Insider Threat v4.2 Dataset](https://resources.sei.cmu.edu/library/asset-view.cfm?assetID=508099) simulates realistic insider threat scenarios using synthetic data including:
 - `logon.csv`: User logon/logoff events
 - `file.csv`: File transfers to removable devices
 - `http.csv`: Web browsing history
@@ -62,13 +64,41 @@ All files were ingested into **Azure Blob Storage**, then queried and cleaned in
 
 ### 3. **User Investigation with OpenAI**
 - Use Azure OpenAI to analyze and summarize behaviors of the flagged anomalous users ([aoai_investigate_anomalies.ipynb](03_aoai_user_investigation/aoai_investigate_anomalies.ipynb))
- - Pull the 500 most recent logs per cleaned dataset for a flagged user
- - Pull user LDAP background information
- - Pull user engineered features
- - Generate a prompt embedding user logs, background information, and engineered features
- - Submit the prompt to AOAI along with analysis instructions
- - View AOAI output (summary, anomalous behaviors, timeline of events, risk assessment, recommendations) - [example output](03_aoai_user_investigation/example_aoai_anomaly_analysis_output.md)
+  - Generate a prompt to submit to AOAI with the user's logs (500 most recent events from each dataset), LDAP background information, and engineered features
+  - Submit the prompt to AOAI along with analysis instructions
+  - View AOAI output (summary, anomalous behaviors, timeline of events, risk assessment, recommendations) - [example output](03_aoai_user_investigation/example_aoai_anomaly_analysis_output.md)
 
+#### Example AOAI Final Investigation Analysis Output
+```
+## Insider Threat Analysis Summary (Example AOAI Output)
+
+**User Summary**  
+User: Anonymous Employee (XXXXX-ID) — Senior IT Administrator in the Electronic Security team, with broad access and technical privileges.
+
+**Behavior Summary**  
+In the recent period, the user exhibited a moderate decrease in overall activity compared to baseline, but with a significant proportion of after-hours logons, increased interaction with external parties, and evidence of risky behaviors. Notably, there is a spike in job search-related web activity, external communications, and the presence of a suspicious executable file associated with keylogging/malware.
+
+**Anomalous Activities**  
+1. Execution of Undetectable Keylogger/Surveillance Malware: On 2010-12-09, the user executed [REDACTED_FILENAME].exe on [REDACTED_DEVICE_ID], a file described as "undetectable username malware" with keylogging and covert surveillance capabilities.  
+2. High Volume of Job Search and External Communications: There is a marked increase in visits to job search and recruitment websites (e.g., CareerBuilder, LinkedIn, Indeed, Monster, SimplyHired, Craigslist, Yahoo HotJobs) and a spike in emails sent to external addresses, including personal and non-corporate domains.  
+3. Elevated After-Hours Activity and Use of Multiple Devices: 54% of recent logons occurred after hours (26 out of 48), and the user accessed four different devices recently, with device connect/disconnect events clustered in short intervals.
+
+**Anomalous Timeline of Events**  
+- 2010-12-06 to 2010-12-10 — Surge in job search web activity (multiple job boards, LinkedIn, etc.), repeated access to file-sharing and personal email services, and increased external email traffic.  
+- 2010-12-09 — Execution of a keylogger/surveillance tool on the user's primary workstation ([REDACTED_DEVICE_ID]), followed by continued after-hours activity and further external communications.  
+- 2010-12-09 to 2010-12-10 — Continued high frequency of after-hours logons, persistent access to job search and file-sharing sites, and ongoing external email correspondence, including to personal and non-corporate addresses.
+
+**Risk Assessment**  
+- Risk Level: High  
+- Justification: The combination of malware/keylogger execution, increased external job search and communication, high after-hours access, and deviation from baseline in both device usage and external interactions strongly indicate potential insider threat activity, possibly involving data exfiltration or credential harvesting.
+
+**Recommendations**  
+- Immediately escalate to security incident response for forensic investigation of the affected workstation(s).  
+- Temporarily suspend or restrict the user's privileged access pending investigation.  
+- Review outbound data transfers and email attachments for possible exfiltration.  
+- Conduct an interview with the user to assess intent and clarify anomalous behaviors.  
+- Increase monitoring of related accounts and endpoints for lateral movement or additional compromise.
+```
 ---
 
 ### ✅ Requirements
@@ -82,13 +112,13 @@ All files were ingested into **Azure Blob Storage**, then queried and cleaned in
 2. Upload dataset files into an Azure Blob Storage
 3. Link storage container in Synapse Studio
 4. Run notebooks sequentially:
-  - Ingest and clean data
-  - Engineer features
-  - Train Isolation Forest model
-  - Investigate flagged users using OpenAI
+   - [01_data_cleaning](01_data_cleaning)
+   - [02_anomaly_detection/engineer_model_features.ipynb](02_anomaly_detection/engineer_model_features.ipynb)
+   - [02_anomaly_detection/train_isolation_forest.ipynb](02_anomaly_detection/train_isolation_forest.ipynb)
+   - [03_aoai_user_investigation/aoai_investigate_anomalies.ipynb](03_aoai_user_investigation/aoai_investigate_anomalies.ipynb)
 
 ### 📌 Future Work
-* Automate the pipeline with Synapse Pipelines or Azure Data Factory - While this solution is implemented as a prototype, it is designed using scalable Azure components that support large volumes of data. The architecture can be extended into production pipelines using Synapse Pipelines and Azure Data Factory.
+* Automate the workflow with Synapse Pipelines or Azure Data Factory. While this solution is implemented as a prototype, it is designed using scalable Azure components that support large volumes of data. The architecture can be extended into production pipelines.
 * Add graph-based user behavior modeling
 * Experiment with time-series anomaly models (e.g., VAE, LSTM)
 
@@ -96,7 +126,7 @@ All files were ingested into **Azure Blob Storage**, then queried and cleaned in
 This project uses synthetic data and should not be used for production security monitoring without compliance review. When using LLMs for anomaly analysis, consider explainability, bias, and privacy concerns.
 
 ### ⚠️ **Disclaimer**
-This repository is part of a personal learning project and is not an official Microsoft product or endorsed solution. It uses the CERT Insider Threat Dataset v4.2 from Carnegie Mellon University SEI strictly for research. No raw dataset or derived data is included here. To access the dataset, please visit the [official SEI site](https://resources.sei.cmu.edu/library/asset-view.cfm?assetID=508099).
+This repository is part of a learning project and is not an official Microsoft product or endorsed solution. It uses the CERT Insider Threat Dataset v4.2 from Carnegie Mellon University SEI for learning. No raw dataset is included here. To access the dataset, please visit the [official SEI site](https://resources.sei.cmu.edu/library/asset-view.cfm?assetID=508099).
 
 ### 📣 Contact
 Simra Ali
