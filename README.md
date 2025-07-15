@@ -6,9 +6,13 @@ _Motivation:_ Insider threats remain one of the most challenging security risks 
 
 ---
 ## 📌 Project Overview
-This repository showcases a modern approach to insider threat detection by combining:
-- **Machine learning** with SynapseML’s Isolation Forest
-- **Generative AI insights** with Azure OpenAI to summarize and assess user risk
+This repository showcases a modern four-step approach to insider threat detection:
+1. **Data Ingestion and Storage** – Store structured user log data in Azure Data Lake Storage Gen 2 
+2. **Data Processing and Feature Engineering** – Clean logs and extract user behavior features with Spark in Azure Synapse 
+3. **Anomaly Detection** – Train and run an anomaly detection model to flag anomalous users with SynapseML 
+4. **Generative AI User Investigation** – Analyze and summarize flagged user activity into structured reports with Azure OpenAI 
+
+![workflow](workflow.png)
 
 ---
 ## 🚀 Technologies Used
@@ -50,21 +54,25 @@ All files were ingested into **Azure Blob Storage**, then queried and cleaned in
 │ └── aoai_investigate_anomalies.ipynb \
 │ └── example_aoai_anomaly_analysis_output.md \
 │ └── README.md \
-└── README.md
+└── README.md \
+└── license.txt \
+└── workflow.png
 
 ---
 ## 🔄 Workflow
-### 1. **Data Ingestion & Cleaning**
+### 1. **Data Ingestion**
 - Upload dataset `csv` files into Azure Data Lake Storage Gen2
 - Connect the data lake container to Synapse as a linked service
+
+### 2. **Data Processing & Feature Engineering**
 - Explore data with Synapse SQL
 - Clean and standardize records using Spark in Synapse Notebooks ([01_data_cleaning](01_data_cleaning))
+- Generate model features from the cleaned log datasets ([engineer_model_features.ipynb](02_anomaly_detection/engineer_model_features.ipynb))
 
 ### 2. **Anomaly Detection**
-- Generate model features from the cleaned log datasets ([engineer_model_features.ipynb](02_anomaly_detection/engineer_model_features.ipynb))
 - Train an _Isolation Forest_ model using SynapseML and flag the top 7% of most anomalous users ([train_isolation_forest.ipynb](02_anomaly_detection/train_isolation_forest.ipynb))
 
-### 3. **User Investigation with OpenAI**
+### 3. **Generative AI User Investigation**
 - Use Azure OpenAI to analyze and summarize behaviors of the flagged anomalous users ([aoai_investigate_anomalies.ipynb](03_aoai_user_investigation/aoai_investigate_anomalies.ipynb))
   - Generate a prompt to submit to AOAI with the user's logs (500 most recent events from each dataset), LDAP background information, and engineered features
   - Submit the prompt to AOAI along with analysis instructions
