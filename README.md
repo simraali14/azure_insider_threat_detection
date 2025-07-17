@@ -1,12 +1,14 @@
 # Insider Threat Detection with Azure Synapse and Azure OpenAI
 
-Detect and investigate insider threats using anomaly detection and generative AI. This solution uses **_Azure Synapse, SynapseML, and Azure OpenAI_** to build a scalable solution for identifying and analyzing anomalous user behavior.
+_Brief Summary: Detect and investigate insider threats using anomaly detection and generative AI. This solution uses **_Azure Synapse, SynapseML, and Azure OpenAI_** to build a scalable solution for identifying and analyzing anomalous user behavior._
 
-_Motivation:_ Insider threats remain one of the most challenging security risks to detect and mitigate. Unlike external threats, insiders have legitimate access, making their actions harder to distinguish from normal activity. 
+Insider threats remain one of the most challenging security risks to detect and mitigate. Unlike external threats, insiders have legitimate access, making their actions harder to distinguish from normal activity. According to the 2025 Verizon Data Breach Investigations Report, 18% of breaches involve internal actors. This statistic underscores a significant risk, as trusted personnel are often among the most difficult to detect and the most damaging when compromised. 
+ 
+To effectively respond to this challenge, organizations need a modern, cloud-based approach that integrates behavioral analytics with generative AI. This repository presents a high-level solution that leverages Azure Synapse and Azure OpenAI to detect and investigate insider threats to help cybersecurity analysts prioritize the most critical risks. 
 
 ---
 ## 📌 Project Overview
-This repository showcases a modern four-step approach to insider threat detection:
+Modern four-step approach to insider threat detection:
 1. **Data Ingestion and Storage** – Store structured user log data in Azure Data Lake Storage Gen 2 
 2. **Data Processing and Feature Engineering** – Clean logs and extract user behavior features with Spark in Azure Synapse 
 3. **Anomaly Detection** – Train and run an anomaly detection model to flag anomalous users with SynapseML 
@@ -113,6 +115,15 @@ In the recent period, the user exhibited a moderate decrease in overall activity
 ```
 ---
 
+## 🧠 Design Decisions
+### Why Use a Baseline/Recent Window? Why 60 days and 14 days?
+I adopted a dual-window approach (60-day baseline, 14-day recent) to capture both long-term behavioral norms and short-term anomalies. The 60-day baseline provides a stable view of a user’s normal behavior, smoothing out short-term fluctuations. The 14-day recent window is short enough to detect sudden behavioral shifts, such as spikes in after-hours activity, external communications, or suspicious web browsing, that often precede insider threat incidents. This dual-window approach enables the model to compute meaningful spike ratios and prioritize users with the most significant deviations.
+
+### Why Use AOAI for Summarization?
+Rather than relying on static rules or dashboards, we use Azure OpenAI to simulate the reasoning of a cybersecurity analyst. This enables nuanced interpretation of log data, contextual risk assessment, and structured reporting that accelerates analyst workflows.
+
+---
+
 ### ✅ Requirements
 * Azure Subscription with:
   * Synapse workspace (with Spark pool)
@@ -128,6 +139,8 @@ In the recent period, the user exhibited a moderate decrease in overall activity
    - [02_anomaly_detection/engineer_model_features.ipynb](02_anomaly_detection/engineer_model_features.ipynb)
    - [02_anomaly_detection/train_isolation_forest.ipynb](02_anomaly_detection/train_isolation_forest.ipynb)
    - [03_aoai_user_investigation/aoai_investigate_anomalies.ipynb](03_aoai_user_investigation/aoai_investigate_anomalies.ipynb)
+
+---
 
 ### 📌 Future Work
 * Automate the workflow with Synapse Pipelines or Azure Data Factory. While this solution is implemented as a prototype, it is designed using scalable Azure components that support large volumes of data. The architecture can be extended into production pipelines.
