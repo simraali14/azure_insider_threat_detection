@@ -8,7 +8,7 @@
 
 3. **Scalability:** Isolation Forests scale well with the number of data points and dimensions, making them suitable for high-dimensional data typically involved in insider threat detection.
 
-While Isolation Forest is a strong choice for anomaly detection, other models worth exploring include Local Outlier Factor (LOF), One-Class SVM, and Autoencoders. Each of these models offers unique advantages and can provide valuable insights into anomalous user behavior.
+While Isolation Forest is a strong choice for anomaly detection, other models worth exploring include Local Outlier Factor (LOF) and One-Class SVMs. Each of these models offers unique advantages and can provide valuable insights into anomalous user behavior.
 
 ---
 
