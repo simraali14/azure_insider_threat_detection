@@ -42,29 +42,6 @@ All files were ingested into **Azure Blob Storage**, then queried and cleaned in
 \* _Note: Psychometric data was intentionally excluded from analysis due to ethical and privacy considerations._
 
 ---
-## 🧱 Project Structure
-📦 azure_insider_threat_detection \
-├── **01_data_cleaning/** \
-│ ├── clean_device_events.ipynb \
-│ ├── clean_email_events.ipynb \
-│ ├── clean_file_events.ipynb \
-│ └── clean_http_events.ipynb \
-│ └── clean_logon_events.ipynb \
-│ └── clean_user_details.ipynb (LDAP dataset) \
-├── **02_anomaly_detection/** \
-│ ├── engineer_model_features.ipynb \
-│ └── train_isolation_forest.ipynb \
-│ └── README.md \
-├── **03_aoai_user_investigation/** \
-│ └── aoai_investigate_anomalies.ipynb \
-│ └── example_aoai_anomaly_analysis_output.md \
-│ └── prompt_pipeline.png \
-│ └── README.md \
-└── README.md \
-└── license.txt \
-└── workflow.png
-
----
 ## 🔄 Workflow
 ### 1. **Data Ingestion**
 - Upload dataset `csv` files into Azure Data Lake Storage Gen2
@@ -147,6 +124,30 @@ Rather than relying on static rules or dashboards, we use Azure OpenAI to simula
    - [02_anomaly_detection/engineer_model_features.ipynb](02_anomaly_detection/engineer_model_features.ipynb)
    - [02_anomaly_detection/train_isolation_forest.ipynb](02_anomaly_detection/train_isolation_forest.ipynb)
    - [03_aoai_user_investigation/aoai_investigate_anomalies.ipynb](03_aoai_user_investigation/aoai_investigate_anomalies.ipynb)
+
+---
+
+## 🧱 Project Structure
+📦 azure_insider_threat_detection \
+├── **01_data_cleaning/** \
+│ ├── clean_device_events.ipynb \
+│ ├── clean_email_events.ipynb \
+│ ├── clean_file_events.ipynb \
+│ └── clean_http_events.ipynb \
+│ └── clean_logon_events.ipynb \
+│ └── clean_user_details.ipynb (LDAP dataset) \
+├── **02_anomaly_detection/** \
+│ ├── engineer_model_features.ipynb \
+│ └── train_isolation_forest.ipynb \
+│ └── README.md \
+├── **03_aoai_user_investigation/** \
+│ └── aoai_investigate_anomalies.ipynb \
+│ └── example_aoai_anomaly_analysis_output.md \
+│ └── prompt_pipeline.png \
+│ └── README.md \
+└── README.md \
+└── license.txt \
+└── workflow.png
 
 ---
 
