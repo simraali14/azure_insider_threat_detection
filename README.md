@@ -73,10 +73,12 @@ All files were ingested into **Azure Blob Storage**, then queried and cleaned in
 - Train an _Isolation Forest_ model using SynapseML and flag the top 7% of most anomalous users ([train_isolation_forest.ipynb](02_anomaly_detection/train_isolation_forest.ipynb))
 
 ### 3. **Generative AI User Investigation**
-- Use Azure OpenAI to analyze and summarize behaviors of the flagged anomalous users ([aoai_investigate_anomalies.ipynb](03_aoai_user_investigation/aoai_investigate_anomalies.ipynb))
-  - Generate a prompt to submit to AOAI with the user's logs (500 most recent events from each dataset), LDAP background information, and engineered features
-  - Submit the prompt to AOAI along with analysis instructions
-  - View AOAI output (summary, anomalous behaviors, timeline of events, risk assessment, recommendations) - [example output](03_aoai_user_investigation/example_aoai_anomaly_analysis_output.md)
+Once users are flagged as anomalous by the Isolation Forest model, Azure OpenAI (AOAI) is used to simulate the reasoning of a cybersecurity analyst ([aoai_investigate_anomalies.ipynb](03_aoai_user_investigation/aoai_investigate_anomalies.ipynb)). The investigation process includes:
+  - **Dynamic Time Windowing:** For each user, logs from five log types (device, email, file, logon, HTTP) are pulled from a 60-day window ending at their most recent activity.
+  - **Log Chunking and Summarization:** For each log type, logs are chunked and summarized using AOAI. Each chunk is analyzed for suspicious behavior, flagged entries, and relevance scores. AOAI synthesizes the chunk summaries into a single summary per log type.
+  - **Final Report Generation:** The synthesized log summaries are then combined with user LDAP information and the user's engineered features to generate a structured report that includes: user background and behavior summary, anomalous activities and timeline, risk assessment, and recommendations.
+
+This approach enables analysts to quickly understand the context and severity of anomalous behavior without manually reviewing raw logs.
 
 #### Example AOAI Final Investigation Analysis Output
 ```
