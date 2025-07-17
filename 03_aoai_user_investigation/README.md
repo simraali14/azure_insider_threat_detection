@@ -72,9 +72,3 @@ In the recent period, the user exhibited a moderate decrease in overall activity
 - Conduct an interview with the user to assess intent and clarify anomalous behaviors.  
 - Increase monitoring of related accounts and endpoints for lateral movement or additional compromise.
 ```
-
-#### Before Running This Notebook
-- Update "api_key" with your Azure OpenAI API Key
-- Set the "user" variable to the username you want to investigate
-- Set the "log_window_days" variable to the desired X number of recent days you would like to analyze. I suggest matching the time range the isolation forest anomaly detection was performed on.
-- Ensure the cleaned log tables (device, email, file, logon, http) are accessible
