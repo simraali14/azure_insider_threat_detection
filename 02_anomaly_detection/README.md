@@ -2,11 +2,7 @@
 
 ### Why use an Isolation Forest model?
 
-1. **Anomaly Detection:** Isolation Forests are specifically designed for anomaly detection. They randomly select features and split values to separate observations, making it easier to detect anomalies.
-
-2. **Efficiency:** The algorithm is computationally efficient and can handle large datasets, which is crucial for processing extensive logs and user activity data.
-
-3. **Scalability:** Isolation Forests scale well with the number of data points and dimensions, making them suitable for high-dimensional data typically involved in insider threat detection.
+Isolation Forest is a fast, scalable algorithm that excels at detecting rare behavioral outliers in high-dimensional data, making it ideal for identifying insider threats without requiring labeled examples.
 
 While Isolation Forest is a strong choice for anomaly detection, other models worth exploring include Local Outlier Factor (LOF) and One-Class SVMs. Each of these models offers unique advantages and can provide valuable insights into anomalous user behavior.
 
@@ -33,4 +29,4 @@ This combination of temporal and behavioral features helps the model differentia
 
 ## Step 2) Model Training ([train_isolation_forest.ipynb](train_isolation_forest.ipynb))
 
-This notebook is designed to train an Isolation Forest model for anomaly detection. The goal is to identify anomalous user behavior that may indicate insider threats. The notebook loads in the engineered feature dataset from the previous step and trains an isolatin model, specifying that 7% of the dataset should be flagged as anomalous. This percentage can be adjusted based on your usecase. The result of the models inference on the data is then stored in a dataset that includes each user and their anomalous score (ranges from 0.0 to 1.0, with 1.0 being the most anomalous) and anomalous prediction (0 - non anomalous, 1 - anomalous)
+This notebook is designed to train an Isolation Forest model for anomaly detection. The goal is to identify anomalous user behavior that may indicate insider threats. The notebook loads in the engineered feature dataset from the previous step and trains an isolation model, specifying that 7% of the dataset should be flagged as anomalous. This percentage can be adjusted based on your usecase. The result of the models inference on the data is then stored in a dataset that includes each user and their anomalous score (ranges from 0.0 to 1.0, with 1.0 being the most anomalous) and anomalous prediction (0 - non anomalous, 1 - anomalous)
