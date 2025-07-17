@@ -18,14 +18,26 @@ of user behavior and potential risks.
 ---
 
 ### Investigate Anomalies ([aoai_investigate_anomalies.ipynb](aoai_investigate_anomalies.ipynb))
-This notebook leverages Azure OpenAI (AOAI) to simulate the reasoning of a cybersecurity analyst.
-Once a users has been nominated as anomalous from the isolation forest model, this notebook can be used to further explain the users behavior.
-AOAI analyzes the users most recent logs, background employee information, and engineered features to create an analysis report of the user's anomalous activity, anomalous activity timelines, and recommendations for next steps.
+## AOAI Insider Threat Analysis
+This notebook leverages Azure OpenAI (AOAI) to simulate the reasoning of a cybersecurity analyst. Once users have been nominated as anomalous (e.g., via the train_isolation_forest.ipynb script), this notebook is used to investigate and explain their behavior using log summaries and engineered features.
 
-**AOAI prompt:**
-- Combines user background, engineered features, and raw event logs.
-- Encourages temporal and semantic reasoning to detect anomalies.
-- Produces a structured analysis summary including risk level, anomalous activities, and recommendations.
+##### Approach
+_Log types: device, email, file, HTTP, logon logs_
+
+- **Step 1) Pull user logs for a dynamic time window:** The analysis window is dynamically computed based on each users most recent activity. The investigation covers a variable-defined time range (currently set to 60 days) ending at the users last known activity. Each log type dataset is queried to retrieve the users activity for this time range.
+
+- **Step 2) Summarize logs with chunking:** For each log type, the logs are broken into manageable chunks and summarized individually with AOAI. Each chunk summary highlights suspicious behavior, flags relevant entries, and assigns relevance scores. These chunks are then synthesized into a single summary for each log type.
+
+- **Step 3) Generate structured final report:** AOAI leverages the log summaries and additional context to generate a structured report that includes: user summary and background, behavioral patterns and anomalies, timeline of suspicious events, and risk assessment and recommendations.
+
+#### AOAI prompts
+_"You are a cybersecurity analyst...."_
+
+* **Chunk-Level Prompts** - For each log chunk, a prompt provides a description for what type of data is contained in that chunk and instructs the model to flag suspicious entries with timestamps and relevance scores.
+
+* **Synthesis Prompts** - A synthesis prompt combines all chunk summaries into a single summary the highlights the most important findings and flagged entries.
+
+* **Final Report Prompt** - The final prompt integrates the synthesized summaries, users background, and engineered features and instructs AOAI to generate a structured report.
 
 **Example AOAI output:**
 ```
@@ -59,7 +71,8 @@ In the recent period, the user exhibited a moderate decrease in overall activity
 - Increase monitoring of related accounts and endpoints for lateral movement or additional compromise.
 ```
 
-**Before running script:**
-- update "api_key" with your AOAI API Key
-- update "user" variable with the username of the user you would like to analyze
-- update "max_logs" variable with the max number of logs your deployment of AOAI can use (experiment with different values)
+#### Before Running This Notebook
+- Update "api_key" with your Azure OpenAI API Key
+- Set the "user" variable to the username you want to investigate
+- Set the "log_window_days" variable to the desired X number of recent days you would like to analyze. I suggest matching the time range the isolation forest anomaly detection was performed on.
+- Ensure the cleaned log tables (device, email, file, logon, http) are accessible
