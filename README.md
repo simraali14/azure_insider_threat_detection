@@ -2,17 +2,20 @@
 
 _Brief Summary: Detect and investigate insider threats using anomaly detection and generative AI. This solution uses **_Azure Synapse, SynapseML, and Azure OpenAI_** to build a scalable solution for identifying and analyzing anomalous user behavior._
 
-Insider threats remain one of the most challenging security risks to detect and mitigate. Unlike external threats, insiders have legitimate access, making their actions harder to distinguish from normal activity. According to the 2025 Verizon Data Breach Investigations Report, 18% of breaches involve internal actors. This statistic underscores a significant risk, as trusted personnel are often among the most difficult to detect and the most damaging when compromised. 
+Insider threats remain one of the most challenging security risks to detect and mitigate. Unlike external threats, insiders have legitimate access, making their actions harder to distinguish from normal activity. According to the 2025 Verizon Data Breach Investigations Report, 18% of breaches involve internal actors. This underscores the critical need for advanced detection capabilities, as insider threats are often among the most difficult to detect and the most damaging when compromised.
  
-To effectively respond to this challenge, organizations need a modern, cloud-based approach that integrates behavioral analytics with generative AI. This repository presents a high-level solution that leverages Azure Synapse and Azure OpenAI to detect and investigate insider threats to help cybersecurity analysts prioritize the most critical risks. 
+To address this challenge, organizations require a modern, cloud-native approach that combines behavioral analytics with generative AI. This article outlines a high-level solution using Azure Synapse and Azure OpenAI to detect and investigate insider threats. The result is an AI-generated investigation report for each flagged insider threat, summarizing anomalous behaviors, risk levels, and recommended actions - empowering analysts to act swiftly and effectively.
 
 ---
 ## 📌 Project Overview
 Modern four-step approach to insider threat detection:
-1. **Data Ingestion and Storage** – Store structured user log data in Azure Data Lake Storage Gen 2 
-2. **Data Processing and Feature Engineering** – Clean logs and extract user behavior features with Spark in Azure Synapse 
-3. **Anomaly Detection** – Train and run an anomaly detection model to flag anomalous users with SynapseML 
-4. **Generative AI User Investigation** – Analyze and summarize flagged user activity into structured reports with Azure OpenAI 
+1. **Data Ingestion and Storage** – Structured user log data is stored in Azure Data Lake Storage Gen 2. 
+
+2. **Data Processing and Feature Engineering** – Logs are cleaned and user behavior features are extracted using Spark in Azure Synapse. 
+
+3. **Anomaly Detection** – Anomalous users are flagged by an anomaly detection algorithm in SynapseML. 
+
+4. **Generative AI User Investigation** – Flagged user activity is analyzed and summarized into structured reports using Azure OpenAI. 
 
 ![workflow](workflow.png)
 
@@ -55,6 +58,7 @@ All files were ingested into **Azure Blob Storage**, then queried and cleaned in
 ├── **03_aoai_user_investigation/** \
 │ └── aoai_investigate_anomalies.ipynb \
 │ └── example_aoai_anomaly_analysis_output.md \
+│ └── prompt_pipeline.png \
 │ └── README.md \
 └── README.md \
 └── license.txt \
@@ -75,10 +79,14 @@ All files were ingested into **Azure Blob Storage**, then queried and cleaned in
 - Train an _Isolation Forest_ model using SynapseML and flag the top 7% of most anomalous users ([train_isolation_forest.ipynb](02_anomaly_detection/train_isolation_forest.ipynb))
 
 ### 3. **Generative AI User Investigation**
-Once users are flagged as anomalous by the Isolation Forest model, Azure OpenAI (AOAI) is used to simulate the reasoning of a cybersecurity analyst ([aoai_investigate_anomalies.ipynb](03_aoai_user_investigation/aoai_investigate_anomalies.ipynb)). The investigation process includes:
-  - **Dynamic Time Windowing:** For each user, logs from five log types (device, email, file, logon, HTTP) are pulled from a 60-day window ending at their most recent activity.
-  - **Log Chunking and Summarization:** For each log type, logs are chunked and summarized using AOAI. Each chunk is analyzed for suspicious behavior, flagged entries, and relevance scores. AOAI synthesizes the chunk summaries into a single summary per log type.
-  - **Final Report Generation:** The synthesized log summaries are then combined with user LDAP information and the user's engineered features to generate a structured report that includes: user background and behavior summary, anomalous activities and timeline, risk assessment, and recommendations.
+Once users are flagged as anomalous by the Isolation Forest model, Azure OpenAI (AOAI) is used to simulate the reasoning of a cybersecurity analyst ([aoai_investigate_anomalies.ipynb](03_aoai_user_investigation/aoai_investigate_anomalies.ipynb)). 
+
+![prompt_pipeline](03_aoai_user_investigation/prompt_pipeline.png)
+
+For each user, the process is as follows: 
+* **Log Retrieval:** Pull logs from each data source for a 60-day window ending at the user’s most recent activity. 
+* **Log Summarization:** For each log source, the logs are broken into manageable chunks. Azure Open AI analyzes and summarizes each chunk to identify unusual access patterns or suspicious events and assigns relevance scores based on event severity. Azure OpenAI then synthesizes the chunk-level summaries into a single summary per log source, highlighting the most critical behaviors.  
+* **Final Report Generation:** The synthesized summaries are combined with user background information and engineered features to produce a structured report. The report includes a behavior summary, timeline of anomalous events, risk assessment, and recommended next steps. 
 
 This approach enables analysts to quickly understand the context and severity of anomalous behavior without manually reviewing raw logs.
 
