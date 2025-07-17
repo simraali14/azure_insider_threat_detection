@@ -2,18 +2,14 @@
 
 ### Why use AOAI?
 
-Azure OpenAI (AOAI) is leveraged in this project to simulate the reasoning of a cybersecurity analyst. 
-By using AOAI, we can analyze complex user behaviors and generate detailed reports that provide insights into potential insider threats. 
-AOAI combines user background information, engineered features, and raw event logs to produce structured analysis summaries, including risk levels, 
-anomalous activities, and recommendations. This approach enhances the detection and investigation process by providing a comprehensive understanding 
-of user behavior and potential risks.
+Azure OpenAI (AOAI) is leveraged in this project to simulate the reasoning of a cybersecurity analyst. AOAI combines user background information, engineered features, and event log summaries to produce a structured investigation report. This approach enhances the detection and investigation process by providing a comprehensive understanding of user behavior and potential risks.
 
 **Additional Benefits for Cybersecurity Specialists:**
 
-* **Expedited Workflows:** AOAI can significantly speed up the analysis process by quickly processing large volumes of data and generating insights, allowing cybersecurity specialists to focus on critical tasks and decision-making.
-* **Second Review:** AOAI provides an additional layer of analysis, acting as a second review to validate findings and ensure no potential threats are overlooked.
-* **Scalability:** AOAI can handle large datasets and complex scenarios, making it suitable for organizations with extensive and diverse data sources.
-* **Enhanced Detection:** By leveraging advanced AI capabilities, AOAI can detect subtle and complex patterns that might be missed by traditional methods, improving the overall effectiveness of threat detection.
+* **Expedited Workflows:** AOAI can significantly speed up the analysis by quickly processing large volumes of data and generating insights.
+* **Second Review:** AOAI provides an additional layer of analysis, acting as a second review to validate findings and ensure potential threats are not overlooked.
+* **Scalability:** AOAI can handle large datasets and complex scenarios, making it suitable for organizations with large and diverse data sources.
+* **Enhanced Detection:** AOAI can detect subtle and complex patterns that might be missed by traditional methods.
 
 ---
 
@@ -32,43 +28,59 @@ _Log types: device, email, file, HTTP, logon logs_
 
 - **Step 3) Final Report Generation:** AOAI leverages the log summaries and additional context to generate a structured report that includes: user summary and background, behavioral patterns and anomalies, timeline of suspicious events, and risk assessment and recommendations.
 
-#### AOAI prompts
-_"You are a cybersecurity analyst...."_
+## Sample Insider Threat Investigation Report (from AOAI)
+<details>
+  <summary>📄 Sample Report (click to expand)</summary>
 
-* **Chunk-Level Prompts** - For each log chunk, a prompt provides a description for what type of data is contained in that chunk and instructs the model to flag suspicious entries with timestamps and relevance scores.
-
-* **Synthesis Prompts** - A synthesis prompt combines all chunk summaries into a single summary the highlights the most important findings and flagged entries.
-
-* **Final Report Prompt** - The final prompt integrates the synthesized summaries, users background, and engineered features and instructs AOAI to generate a structured report.
-
-**Example AOAI output:**
-```
-## Insider Threat Analysis Summary (Example Output from AOAI)
+---
 
 **User Summary**  
-User: Anonymous Employee (XXXXX-ID) — Senior IT Administrator in the Electronic Security team, with broad access and technical privileges.
+User: [Redacted Employee] [UserID-XXXX] — IT Administrator in the Security department with privileged access across multiple systems.
+
+Time Window Analyzed: 2023-06-01 to 2023-07-31
 
 **Behavior Summary**  
-In the recent period, the user exhibited a moderate decrease in overall activity compared to baseline, but with a significant proportion of after-hours logons, increased interaction with external parties, and evidence of risky behaviors. Notably, there is a spike in job search-related web activity, external communications, and the presence of a suspicious executable file associated with keylogging/malware.
+During the analysis period, the user exhibited a notable decrease in overall activity volume compared to baseline, but with a concentration of high-risk behaviors. These included repeated after-hours system access, frequent USB and file transfer activity (especially to removable media), extensive external email communications with large attachments, and persistent access to suspicious web domains. Notably, the user also copied and _**executed a file identified as a potential keylogger or surveillance tool**_. These behaviors, particularly on a primary workstation, represent a significant deviation from prior patterns.
 
 **Anomalous Activities**  
-1. Execution of Undetectable Keylogger/Surveillance Malware: On 2010-12-09, the user executed [REDACTED_FILENAME].exe on [REDACTED_DEVICE_ID], a file described as "undetectable username malware" with keylogging and covert surveillance capabilities.  
-2. High Volume of Job Search and External Communications: There is a marked increase in visits to job search and recruitment websites (e.g., CareerBuilder, LinkedIn, Indeed, Monster, SimplyHired, Craigslist, Yahoo HotJobs) and a spike in emails sent to external addresses, including personal and non-corporate domains.  
-3. Elevated After-Hours Activity and Use of Multiple Devices: 54% of recent logons occurred after hours (26 out of 48), and the user accessed four different devices recently, with device connect/disconnect events clustered in short intervals.
+1. **Frequent USB and Removable Media Activity**
+    * Numerous rapid connect/disconnect cycles per day, including short-duration and after-hours usage, suggesting potential data exfiltration or evasion of monitoring.
+
+2. **Large-Scale File Transfers to Removable Media**
+    * High-volume transfers of documents, compressed archives, and executable files—some flagged as potentially malicious—often occurring outside business hours.
+
+3. **Suspicious External Email Communications**
+    * Repeated emails to personal and non-corporate domains, often with large attachments and vague or repetitive content, indicating possible data leakage.
+
+4. **Access to Risky Web Domains**
+    * Persistent access to known file-sharing and obfuscated domains associated with malware or exfiltration behavior, including sites previously linked to keylogger distribution.
+
+5. **After-Hours and Multi-System Logon Patterns**
+    * Repeated logons across multiple systems outside standard business hours, deviating from baseline usage patterns.
 
 **Anomalous Timeline of Events**  
-- 2010-12-06 to 2010-12-10 — Surge in job search web activity (multiple job boards, LinkedIn, etc.), repeated access to file-sharing and personal email services, and increased external email traffic.  
-- 2010-12-09 — Execution of a keylogger/surveillance tool on the user's primary workstation ([REDACTED_DEVICE_ID]), followed by continued after-hours activity and further external communications.  
-- 2010-12-09 to 2010-12-10 — Continued high frequency of after-hours logons, persistent access to job search and file-sharing sites, and ongoing external email correspondence, including to personal and non-corporate addresses.
+* **2023-07-30** - Multiple USB connect/disconnect cycles; copying and execution of a flagged executable suspected to be a keylogger; extended after-hours session; access to suspicious web domains.
+
+* **2023-07-25 to 2023-07-29** - Bursts of file transfer activity; short-duration logons on secondary systems; continued access to risky URLs.
+
+* **2023-07-10 to 2023-07-20** - High-volume file transfers to removable media; frequent USB cycling; repetitive access to encoded URLs and file-sharing services.
+
+* **2023-06-15 to 2023-06-20** - External email with large attachment to multiple non-corporate recipients; ambiguous internal communications; after-hours logons.
+  
+* **2023-06-01 to 2023-06-10** - Initial spike in after-hours logons and USB activity across several systems.
 
 **Risk Assessment**  
 - Risk Level: High  
-- Justification: The combination of malware/keylogger execution, increased external job search and communication, high after-hours access, and deviation from baseline in both device usage and external interactions strongly indicate potential insider threat activity, possibly involving data exfiltration or credential harvesting.
+- Justification: The user demonstrates multiple concurrent high-risk behaviors—large-scale file transfers (including a suspected keylogger), abnormal USB activity, suspicious communications, and access to malicious web resources—across several vectors and timeframes. These activities significantly deviate from baseline and align with known insider threat and data exfiltration patterns.
 
 **Recommendations**  
-- Immediately escalate to security incident response for forensic investigation of the affected workstation(s).  
-- Temporarily suspend or restrict the user's privileged access pending investigation.  
-- Review outbound data transfers and email attachments for possible exfiltration.  
-- Conduct an interview with the user to assess intent and clarify anomalous behaviors.  
-- Increase monitoring of related accounts and endpoints for lateral movement or additional compromise.
-```
+- Escalate for full forensic investigation of the user’s systems and removable media.
+- Review flagged emails and file transfers, especially external attachments.
+- Correlate after-hours activity with file access and network logs.
+- Temporarily suspend or restrict privileged access pending investigation.
+- Conduct a formal interview to assess business justification for observed behaviors.
+- Increase monitoring of related accounts and endpoints for potential lateral movement.
+
+---
+
+</details>
