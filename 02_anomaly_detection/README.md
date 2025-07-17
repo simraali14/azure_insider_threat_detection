@@ -13,12 +13,13 @@ While Isolation Forest is a strong choice for anomaly detection, other models wo
 ---
 
 ## Step 1) Feature Engineering ([engineer_model_features.ipynb](engineer_model_features.ipynb))
-This notebook extracts user behavior features from five types of activity logs (device, email, file, HTTP, and logon). These features are then used to train an isolation forest model for insider threat anomaly detection.
+This notebook extracts user behavior features from five types of activity logs (device, email, file, HTTP, and logon) to support insider threat detection using an anomaly detection model (see: investigate_anomalies.ipynb).
 
 #### 🧠 Feature Engineering Strategy
+
 **Temporal windowing approach to capture behavioral shifts:** 
-* 7-day recent window: Captures user behavior in the 7 days leading up to their last recorded event. This reflects short-term activity and is crucial for detecting pre-departure anomalies.
-* 30-day baseline window: Captures typical user behavior in the 30 days prior to the recent window. This helps establish a personalized behavioral norm.
+* 14-day recent window: Captures user behavior in the 14 days leading up to their last recorded event. This reflects short-term activity and is crucial for detecting pre-departure anomalies.
+* 60-day baseline window: Captures typical user behavior in the 60 days prior to the recent window. This helps establish a personalized behavioral norm.
 
 This strategy enables us to detect deviations from a user's baseline — a key signal for insider threats, especially for users who may engage in risky actions shortly before exiting the organization.
 
@@ -29,6 +30,9 @@ This strategy enables us to detect deviations from a user's baseline — a key s
 * **Spike ratios**: compare recent vs. baseline activity to quantify unusual surges (ex. logon_spike_ratio, file_access_spike_ratio)
 
 This combination of temporal and behavioral features helps the model differentiate between normal variation and potential insider threats.
+
+---
+
 
 ---
 
