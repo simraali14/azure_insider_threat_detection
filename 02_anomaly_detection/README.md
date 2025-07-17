@@ -18,10 +18,8 @@ This notebook extracts user behavior features from five types of activity logs (
 #### 🧠 Feature Engineering Strategy
 
 **Temporal windowing approach to capture behavioral shifts:** 
-* 14-day recent window: Captures user behavior in the 14 days leading up to their last recorded event. This reflects short-term activity and is crucial for detecting pre-departure anomalies.
-* 60-day baseline window: Captures typical user behavior in the 60 days prior to the recent window. This helps establish a personalized behavioral norm.
-
-This strategy enables us to detect deviations from a user's baseline — a key signal for insider threats, especially for users who may engage in risky actions shortly before exiting the organization.
+* 60-day baseline window: Captures typical user behavior in the 60 days prior to the recent window. This helps establish a personalized behavioral norm. A 60-day baseline provides a robust view of a user’s typical behavior, smoothing out short-term fluctuations and capturing consistent patterns.
+* 14-day recent window: Captures user behavior in the 14 days leading up to their last recorded event. This reflects short-term activity and is crucial for detecting pre-departure anomalies. A 14-day recent window is short enough to detect sudden behavioral shifts, such as spikes in after-hours activity, external communications, or risky web browsing, that often precede insider threat incidents.
 
 #### 🛠️ Features Include:
 * **Volume metrics:** email_sent_count, logon_count, http_request_count, etc
@@ -29,10 +27,7 @@ This strategy enables us to detect deviations from a user's baseline — a key s
 * **Uniqueness metrics:** unique_files_count, unique_url_count, etc
 * **Spike ratios**: compare recent vs. baseline activity to quantify unusual surges (ex. logon_spike_ratio, file_access_spike_ratio)
 
-This combination of temporal and behavioral features helps the model differentiate between normal variation and potential insider threats.
-
----
-
+This combination of temporal and behavioral features helps the model differentiate between normal variation and potential insider threats. By computing spike ratios (e.g., recent_logon_count / baseline_logon_count), the model can quantify deviations and prioritize users with the most significant behavioral changes.
 
 ---
 
