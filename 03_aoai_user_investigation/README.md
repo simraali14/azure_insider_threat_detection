@@ -24,11 +24,13 @@ This notebook leverages Azure OpenAI (AOAI) to simulate the reasoning of a cyber
 ##### Approach
 _Log types: device, email, file, HTTP, logon logs_
 
-- **Step 1) Pull user logs for a dynamic time window:** The analysis window is dynamically computed based on each users most recent activity. The investigation covers a variable-defined time range (currently set to 60 days) ending at the users last known activity. Each log type dataset is queried to retrieve the users activity for this time range.
+![prompt_pipeline](prompt_pipeline.png)
 
-- **Step 2) Summarize logs with chunking:** For each log type, the logs are broken into manageable chunks and summarized individually with AOAI. Each chunk summary highlights suspicious behavior, flags relevant entries, and assigns relevance scores. These chunks are then synthesized into a single summary for each log type.
+- **Step 1) Log Retrieval:** The analysis window is dynamically computed based on each users most recent activity. The investigation covers a variable-defined time range (currently set to 60 days) ending at the users last known activity. Each log type dataset is queried to retrieve the users activity for this time range.
 
-- **Step 3) Generate structured final report:** AOAI leverages the log summaries and additional context to generate a structured report that includes: user summary and background, behavioral patterns and anomalies, timeline of suspicious events, and risk assessment and recommendations.
+- **Step 2) Log Summarization:** For each log type, the logs are broken into manageable chunks and summarized individually with AOAI. Each chunk summary highlights suspicious behavior, flags relevant entries, and assigns relevance scores. These chunks are then synthesized into a single summary for each log type.
+
+- **Step 3) Final Report Generation:** AOAI leverages the log summaries and additional context to generate a structured report that includes: user summary and background, behavioral patterns and anomalies, timeline of suspicious events, and risk assessment and recommendations.
 
 #### AOAI prompts
 _"You are a cybersecurity analyst...."_
